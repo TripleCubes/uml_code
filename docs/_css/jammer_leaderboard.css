@@ -1,0 +1,29 @@
+#games_that_got_in_top {
+	margin-bottom: 20px;
+}
+
+#games_that_got_in_top > a {
+	margin-right: 7px;
+	margin-bottom: 4px;
+	display: inline-block;
+}
+
+#games_that_got_in_top > span {
+	margin-right: 7px;
+	margin-bottom: 4px;
+	display: inline-block;
+}
+
+.jammer_link {
+	display: inline-block;
+	font-weight: bold;
+	font-size: larger;
+	margin-top: 20px;
+	margin-bottom: 5px;
+	margin-right: 7px;
+}
+
+/* .title {
+	max-width: 220px;
+	min-width: 220px;
+} */	
