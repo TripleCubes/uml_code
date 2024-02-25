@@ -4,7 +4,7 @@ module.exports = {
 };
 
 function calculateIlscore(game, entrants) {
-	let base = ((entrants - game.rank) + 1) * 2
+	let base = 25 * Math.log10(entrants + 1) ** 2
 	let rating_percent = (game.score / 5.0)
 	return Math.floor(base * rating_percent)
 }
