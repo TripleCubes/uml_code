@@ -5,6 +5,8 @@ To scrap files, you will need NodeJS installed. You will also need [jsdom](https
 
 If you dont scrap files, you dont need to install jsdom
 
+> Scraping files took a long time, so there is a `_scraped_files` folder uploaded at [https://github.com/TripleCubes/uml](https://github.com/TripleCubes/uml) that you can download instead. The `_scraped_files` folder need to be placed inside the root folder of the project
+
 First, `cd` to the `scripts/` folder
 
 ```
