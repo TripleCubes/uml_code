@@ -125,7 +125,7 @@ function gameListFirstRow(game_list) {
 	game.append(span('Rk', 'rank', 'Rank'));
 	game.append(span('Rt', 'ratings', 'Number of ratings'));
 	game.append(span('Score', 'score'));
-	game.append(span('ilScr', 'ilscore', 'ilscore = ((num_of_games_in_jam - rank) + 1)*2 * (score/5)'));
+	game.append(span('ilScr', 'ilscore', 'ilscore = (25 * log10(num_of_games_in_jam+1)^2) * (score/5)'));
 
 	game_list.append(game);
 }

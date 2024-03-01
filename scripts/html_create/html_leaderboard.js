@@ -160,7 +160,7 @@ function htmlTableTitleRow() {
 	str_html += HtmlCreateSF.tagStr('span', 'Vs', 'class="vs" title="Number of games in jam"');
 	str_html += HtmlCreateSF.tagStr('span', 'Rk', 'class="rank" title="Rank"');
 	str_html += HtmlCreateSF.tagStr('span', 'Rt', 'class="ratings" title="Number of ratings"');
-	str_html += HtmlCreateSF.tagStr('span', 'ilScr', 'class="ilscore" title="ilscore = ((num_of_games_in_jam - rank) + 1)*2 * (score/5)"');
+	str_html += HtmlCreateSF.tagStr('span', 'ilScr', 'class="ilscore" title="ilscore = (25 * log10(num_of_games_in_jam+1)^2) * (score/5)"');
 	
 	return HtmlCreateSF.tagStr('span', str_html, 'class="game"');
 }
