@@ -1,19 +1,40 @@
 const ScrapFiles = require('./scrap_files/scrap_files');
+const CliArgv = require('./utils/cli_argv');
 
 const INFINITE = -1;
 
 async function main() {
-	let options = ScrapFiles.newOptionObj();
+	if (process.argv.length == 3 && process.argv[2] == '?') {
+		let message = '\n';
+		message += 'request from minijamofficial.com private api and scrap itch.io for datas.\n';
+		message += 'all datas are saved to _scraped_files/ folder\n\n';
 
-	let max_mini_jam_id = INFINITE;
-	if (process.argv.length >= 3) {
-		max_mini_jam_id = parseInt(process.argv[2]);
-		options.create_major_jam_files = false;
-		options.create_jam_list_file = false;
-		options.use_jam_list_json = true;
+		message += 'the scraping is additional, which mean jam links that already been\n';
+		message += 'scraped and saved wont get scraped again. scraped jam links will still\n';
+		message += 'get rescraped if a jammer in the jam change their username or a game\n';
+		message += 'change its name, or a game get removed from the jam\n\n';
+
+		message += 'arguments:\n';
+
+		message += '    wait (optional):              the wait between https requests\n';
+		message += '        type: number\n';
+		message += '        default: 6 (secs)\n\n';
+
+		message += 'example:\n';
+		message += '    node scrap.js wait=7\n';
+
+		console.log(message);
+		return;
 	}
 
-	options.mini_jam_id_max_cap = max_mini_jam_id;
+	let argv_type_list = [
+		{ argv: 'wait', type: 'number' },
+	];
+	let argv_list = CliArgv.getArgvList(process.argv, argv_type_list, 'scrap.js');
+	let wait = CliArgv.getArgv(argv_list, 'wait', 6);
+
+	let options = ScrapFiles.newOptionObj();
+	options.wait_between_https_gets = wait;
 
 	await ScrapFiles.scrapFiles(options);
 }

@@ -15,8 +15,6 @@ const OUTPUT_JAM_LIST_FOLDER_PATH = '../_scraped_files/jam_list/';
 const OUTPUT_MAJOR_JAM_FOLDER_PATH = '../_scraped_files/major_jam/';
 const OUTPUT_MINI_JAM_FOLDER_PATH = '../_scraped_files/mini_jam/';
 
-const WAIT_BETWEEN_HTTPS_GETS = 1;
-
 let options = {};
 let failed_https_get_list = [];
 
@@ -25,7 +23,7 @@ const INFINITE = -1;
 
 function newOptionObj() {
 	return {
-		wait_between_https_gets: WAIT_BETWEEN_HTTPS_GETS,
+		wait_between_https_gets: 6,
 		use_jam_list_json: false,
 		create_jam_list_file: true,
 		create_major_jam_files: true,
