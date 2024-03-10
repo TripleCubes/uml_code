@@ -303,10 +303,22 @@ async function delay(time_sec) {
 }
 
 async function createFile(link, folder_path, file_name) {
+	console.log('\n\n' + link + ' --------------------');
+
 	let game_dom_list = [];
 	let vote_start_time = 0;
 
-	if (options.create_jam_result_files) {
+	let entries = await entriesPage_getEntriesData(link + '/entries');
+
+	let jam_result = [];
+	let result_page_scrap_needed = !File.isFileExist(folder_path + file_name + '.json');
+	if (!result_page_scrap_needed) {
+		jam_result = await File.readJsonFile(folder_path + file_name + '.json');
+		result_page_scrap_needed = compareAndEdit(entries, jam_result);
+	}
+	
+	if (result_page_scrap_needed && options.create_jam_result_files) {
+		console.log('scraping result pages');
 		let a = await resultPage_getGameDomListAndVoteStartTime(link + '/results');
 		game_dom_list = a.game_dom_list;
 		vote_start_time = a.vote_start_time;
@@ -314,7 +326,7 @@ async function createFile(link, folder_path, file_name) {
 		vote_start_time = await resultPage_getJamVoteStartTimeFromLink(link + '/results');
 	}
 
-	if (options.create_jam_result_files) {
+	if (result_page_scrap_needed && options.create_jam_result_files) {
 		data_list = [];
 	
 		for (let i = 0; i < game_dom_list.length; i++) {
@@ -324,13 +336,142 @@ async function createFile(link, folder_path, file_name) {
 		await File.writeJsonFile(data_list, folder_path, file_name + '.json');
 	}
 
+	if (!result_page_scrap_needed && options.create_jam_result_files) {
+		await File.writeJsonFile(jam_result, folder_path, file_name + '.json');
+	}
+
+
 	if (options.create_submission_time_files) {
-		let game_submission_time_list = await feedPage_getGameSubmissionTimeList(link + '/feed');
+		let game_submission_time_list = await getGameSubmissionTimeList(entries);
 		await File.writeJsonFile({
 			vote_start_time: vote_start_time, 
 			jammer_list: game_submission_time_list,
 		}, folder_path, file_name + '_submission_time.json');
 	}
+}
+
+async function entriesPage_getEntriesData(link) {
+	const randomizer_url_search_str = 'randomizer?jam_id=';
+	let entries_page_dom_str = await httpsGet(link);
+	let entries_json_id = Str.getBetween(entries_page_dom_str, randomizer_url_search_str, '"');
+	let entries_json_link = 'https://itch.io/jam/' + entries_json_id + '/entries.json';
+	let entries_json_str = await httpsGet(entries_json_link);
+	let entries = JSON.parse(entries_json_str);
+	return entries;
+}
+
+function compareAndEdit(entries, jam_result) {
+	let result_page_rescrap_needed = false;
+	for (let i = 0; i < entries.jam_games.length; i++) {
+		let entries_game = entries.jam_games[i];
+
+		if (entries_game.rating_count == 0) {
+			continue;
+		}
+
+		let result_game_index = getGameIndexFromJamResultData(jam_result, entries_game);
+		if (result_game_index == -1) {
+			let m = '        > added: ' + entries_game.game.title + ' (' + entries_game.game.url + ')';
+			m += ', jam rescrap needed';
+			console.log(m);
+			result_page_rescrap_needed = true;
+			continue;
+		}
+		let result_game = jam_result[result_game_index];
+
+		let entries_by_list = [];
+		let entries_by_link_list = [];
+		if (entries_game.hasOwnProperty('contributors')) {
+			for (let j = 0; j < entries_game.contributors.length; j++) {
+				let contributor = entries_game.contributors[j];
+				entries_by_list.push(contributor.name);
+				entries_by_link_list.push(contributor.url + '/');
+			}
+		} else {
+			entries_by_list = [ entries_game.game.user.name ];
+			entries_by_link_list = [ entries_game.game.user.url + '/' ];
+		}
+
+		for (let j = 0; j < entries_by_list.length; j++) {
+			let entries_by = entries_by_list[j];
+			let entries_by_link = entries_by_link_list[j];
+			let result_by_index = result_game.by_list.indexOf(replaceAllSpecialChars(entries_by));
+			let result_by_link_index = result_game.by_link_list.indexOf(entries_by_link);
+			if (result_by_index != -1 && result_by_link_index != -1) {
+				continue;
+			}
+			
+			let m = '        > game: ' + result_game.title + ' (' + result_game.title_link + ')';
+			m += ': jammers name/url changed from:'
+			console.log(m);
+			for (let k = 0; k < result_game.by_list.length; k++) {
+				let by = result_game.by_list[k];
+				let by_link = result_game.by_link_list[k];
+				console.log('            ' + by + ' (' + by_link + ')');
+			}
+			console.log('        to');
+			for (let k = 0; k < entries_by_list.length; k++) {
+				let by = entries_by_list[k];
+				let by_link = entries_by_link_list[k];
+				console.log('            ' + by + ' (' + by_link + ')');
+			}
+			result_game.by_list = entries_by_list;
+			result_game.by_link_list = entries_by_link_list;
+			break;
+		}
+	}
+	
+	for (let i = jam_result.length - 1; i >= 0; i--) {
+		let result_game = jam_result[i];
+		let entries_game_index = getGameIndexFromJamEntriesData(entries, result_game);
+		if (entries_game_index != -1) {
+			continue;
+		}
+
+		console.log('        > removed: ' + result_game.title + ' (' + result_game.title_link + ')');
+		jam_result.splice(i, 1);
+	}
+
+	return result_page_rescrap_needed;
+}
+
+function getGameIndexFromJamResultData(jam_result, entries_game) {
+	for (let i = 0; i < jam_result.length; i++) {
+		if (jam_result[i].title == replaceAllSpecialChars(entries_game.game.title)
+		&& jam_result[i].title_link == entries_game.game.url) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+function getGameIndexFromJamEntriesData(entries, result_game) {
+	for (let i = 0; i < entries.jam_games.length; i++) {
+		if (replaceAllSpecialChars(entries.jam_games[i].game.title) == result_game.title
+		&& entries.jam_games[i].game.url == result_game.title_link) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+function replaceAllSpecialChars(s) {
+	s = s.replaceAll('&', '&amp;');
+	s = s.replaceAll('<', '&lt;');
+	s = s.replaceAll('>', '&gt;');
+	return s;
+}
+
+async function getGameSubmissionTimeList(entries) {
+	let result_list = [];
+	for (let i = 0; i < entries.jam_games.length; i++) {
+		let game = entries.jam_games[i];
+		result_list.push({
+			time: Date.parse(game.created_at + ' UTC'),
+			link: game.game.url,
+		});
+	}
+	return result_list;
 }
 
 async function resultPage_getJamVoteStartTimeFromLink(link) {
@@ -395,38 +536,6 @@ function resultPage_getGameData(game) {
 	};
 
 	return data;
-}
-
-async function feedPage_getGameSubmissionTimeList(link) {
-	let result_list = [];
-
-	let page_dom_str = await httpsGet(link);
-	let page_dom = new Jsdom.JSDOM(page_dom_str);
-	while (true) {
-		let event_row_list = page_dom.window.document.querySelectorAll('.event_row');
-		for (let i = 0; i < event_row_list.length; i++) {
-			let event_row = event_row_list[i];
-			if (event_row.querySelector('.event_user_action > strong').innerHTML != 'published a game') {
-				continue;
-			}
-			let time_msec = Date.parse(event_row.querySelector('.event_user_action > .event_time').title + ' UTC');
-			let game_link = event_row.querySelector('.event_content .object_title').href;
-			result_list.push({
-				time: time_msec,
-				link: game_link,
-			});
-		}
-
-		let next_page_link = page_dom.window.document.querySelector('.next_page > a');
-		if (next_page_link == null) {
-			break;
-		}
-
-		page_dom_str = await httpsGet(link + next_page_link.getAttribute('href'));
-		page_dom = new Jsdom.JSDOM(page_dom_str);
-	}
-
-	return result_list;
 }
 
 function gameData_getTableData(table) {

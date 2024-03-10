@@ -6,13 +6,11 @@ const INFINITE = -1;
 async function main() {
 	if (process.argv.length == 3 && process.argv[2] == '?') {
 		let message = '\n';
-		message += 'request from minijamofficial.com private api and scrap itch.io for datas.\n';
-		message += 'all datas are saved to _scraped_files/ folder\n\n';
+		message += 'start scraping. all datas are saved to _scraped_files/ folder\n\n';
 
 		message += 'the scraping is additional, which mean jam links that already been\n';
-		message += 'scraped and saved wont get scraped again. scraped jam links will still\n';
-		message += 'get rescraped if a jammer in the jam change their username or a game\n';
-		message += 'change its name, or a game get removed from the jam\n\n';
+		message += 'scraped and saved wont get scraped again. scraped jam will still\n';
+		message += 'get rescraped if a game change its name or url\n\n';
 
 		message += 'arguments:\n';
 

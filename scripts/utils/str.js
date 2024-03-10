@@ -15,7 +15,7 @@ function rmBetween(str, str_start, str_end) {
 
 function getBetween(str, str_start, str_end) {
 	let start = str.indexOf(str_start);
-	let end = str.indexOf(str_end) + str_end.length;
+	let end = str.indexOf(str_end, start + str_start.length) + str_end.length;
 	return str.slice(start + str_start.length, end - str_end.length);
 }
 

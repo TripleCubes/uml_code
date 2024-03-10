@@ -1,6 +1,5 @@
 const SF = require('../utils/shared_functions');
 const File = require('../utils/file');
-const List = require('../utils/list');
 const Ilscore = require('../utils/ilscore');
 
 module.exports = {
@@ -110,14 +109,14 @@ function getJamPushData(jam, game_list, submission_time_data, jammer_link_total_
 		for (let j = 0; j < game.by_link_list.length; j++) {
 			let by_link = game.by_link_list[j];
 			let by = game.by_list[j];
-			if (!List.isInList(jammer_link_total_list, by_link)) {
+			if (!isInList(jammer_link_total_list, by_link)) {
 				jammer_link_total_list.push(by_link);
 				new_jammer_list.push({
 					by: by,
 					by_link: by_link,
 				});
 			}
-			if (!List.isInList(jammer_link_list, by_link)) {
+			if (!isInList(jammer_link_list, by_link)) {
 				jammer_link_list.push(by_link);
 			}
 		}
@@ -164,4 +163,13 @@ function getJamPushData(jam, game_list, submission_time_data, jammer_link_total_
 		num_of_new_jammer: new_jammer_list.length,
 		game_list: game_list_of_jam,
 	};
+}
+
+function isInList(list, v) {
+	for (let i = 0; i < list.length; i++) {
+		if (list[i] == v) {
+			return true;
+		}
+	}
+	return false;
 }
