@@ -8,9 +8,9 @@ async function main() {
 		let message = '\n';
 		message += 'start scraping. all datas are saved to _scraped_files/ folder\n\n';
 
-		message += 'the scraping is additional, which mean jam links that already been\n';
-		message += 'scraped and saved wont get scraped again. scraped jam will still\n';
-		message += 'get rescraped if a game change its name or url\n\n';
+		message += 'jams that already been scraped and saved wont get scraped\n';
+		message += 'again. scraped jam will still get rescraped if a game change\n';
+		message += 'its name or url\n\n';
 
 		message += 'arguments:\n';
 

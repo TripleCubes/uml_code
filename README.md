@@ -44,7 +44,7 @@ To generate the html files, you need the generated json files
 
 After all files are generated, the page is up to date
 
-## Addition scraping
+## Scraped jams wont get rescraped
 All the scraped files are saved in `_scraped_files/` folder
 
 The scraped jams wont get rescraped, unless a game in the jam change its name or url
