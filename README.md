@@ -8,7 +8,7 @@ You will need NodeJS installed. You will also need [jsdom](https://www.npmjs.com
 
 If you dont scrap files, you dont need to install jsdom
 
-To install jsdom, use
+To install jsdom globally, use
 
 ```
 npm install jsdom -g
