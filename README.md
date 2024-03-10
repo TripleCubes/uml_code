@@ -33,7 +33,7 @@ node [file_name] ?
 
 I recommend doing so for all 3 commands to see what they do
 
-# How the page work
+# How updating the page work
 
 This repository only contain the source code for Unofficial MiniJam Leaderboard. The actual github pages repo is at https://github.com/TripleCubes/uml
 
@@ -42,7 +42,7 @@ The workflow is, you scrap files, and then generate data files, and then you gen
 To generate the json files, you need the scrapped files \
 To generate the html files, you need the generated json files
 
-After all files are generated, the page is up to date
+After all files are generated, copy the `docs/` and `_scraped_files/` folders to https://github.com/TripleCubes/uml
 
 ## Scraped jams wont get rescraped
 All the scraped files are saved in `_scraped_files/` folder
