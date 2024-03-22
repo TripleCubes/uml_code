@@ -330,7 +330,10 @@ async function createFile(link, folder_path, file_name) {
 		data_list = [];
 	
 		for (let i = 0; i < game_dom_list.length; i++) {
-			data_list.push(resultPage_getGameData(game_dom_list[i]));
+			let game_data = resultPage_getGameData(entries, game_dom_list[i]);
+			if (game_data.in_entry_list) {
+				data_list.push(game_data.data);
+			}
 		}
 	
 		await File.writeJsonFile(data_list, folder_path, file_name + '.json');
@@ -518,7 +521,7 @@ function resultPage_getJamVoteStartTimeFromDom(dom) {
 	return Date.parse(element.innerHTML + ' UTC');
 }
 
-function resultPage_getGameData(game) {
+function resultPage_getGameData(entries, game) {
 	let summary = game.querySelector('.game_summary');
 	let table = game.querySelector('.ranking_results_table');
 
@@ -535,7 +538,17 @@ function resultPage_getGameData(game) {
 		table: gameData_getTableData(table),
 	};
 
-	return data;
+	if (getGameIndexFromJamEntriesData(entries, data) == -1) {
+		return {
+			in_entry_list: false,
+			data: {},
+		}
+	}
+
+	return {
+		in_entry_list: true,
+		data: data,
+	}
 }
 
 function gameData_getTableData(table) {
