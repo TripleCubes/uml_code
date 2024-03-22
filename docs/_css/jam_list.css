@@ -23,6 +23,10 @@
 	min-width: 300px;
 }
 
+.title_rank {
+	display: none;
+}
+
 @media only screen and (max-width: 990px) {
 	.num_of_game, .num_of_jammer, .num_of_new_jammer {
 		display: block;
@@ -32,5 +36,9 @@
 
 	.rank {
 		display: none;
+	}
+
+	.title_rank {
+		display: inline-block;
 	}
 }
