@@ -482,7 +482,7 @@ body {
 	}
 
 	.rank_list > span:nth-child(2n) {
-		background-color: rgb(202, 177, 108);
+		background-color: rgb(240, 214, 142);
 	}
 
 	#search_box {
