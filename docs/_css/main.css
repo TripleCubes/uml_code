@@ -442,3 +442,69 @@ body {
 		content: 'ilScore: ';
 	}
 }
+
+@media (prefers-color-scheme: dark) {
+	* {
+		color: rgb(215, 215, 215);
+	}
+
+	body {
+		background-color: #5264AB;
+	}
+
+	#content {
+		background-color: #1e1e1e;
+	}
+
+	.game:nth-child(2n) {
+		background-color: rgb(47, 47, 47);
+	}
+
+	.late, .early, .major_jam_tag, .link_highlight, .rank_list > span,
+	button {
+		color: rgb(37, 37, 37);
+	}
+
+	.late, .link_highlight, button {
+		background-color: rgb(125, 171, 215);
+	}
+
+	.early {
+		background-color: rgb(225, 198, 125);
+	}
+
+	.rank_list > span {
+		background-color: rgb(225, 198, 125);
+	}
+
+	.major_jam_tag {
+		background-color: rgb(225, 157, 157);
+	}
+
+	.rank_list > span:nth-child(2n) {
+		background-color: rgb(202, 177, 108);
+	}
+
+	#search_box {
+		background-color: #404040;
+		border: 1px #919191 solid;
+		border-radius: 2px;
+		padding: 2px 3px;
+	}
+
+	button:hover {
+		background-color: rgb(156, 192, 227);
+	}
+
+	button:active {
+		background-color: rgb(93, 138, 181);
+	}
+}
+
+@media only screen and (max-width: 990px) and (prefers-color-scheme: dark) {
+	.total_ilscore {
+		color: rgb(37, 37, 37);
+		background-color: rgb(225, 198, 125);
+		border-color: rgb(225, 198, 125);
+	}
+}
