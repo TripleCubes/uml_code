@@ -57,7 +57,7 @@ async function create() {
 async function createFiles(jam_list, max_rank, output_folder) {
 	let jammer_list = [];
 
-	jammer_list = await get_updated_jammer_list(jammer_list, jam_list, max_rank);
+	jammer_list = await getUpdatedJammerList(jammer_list, jam_list, max_rank);
 	
 	for (let i = 0; i < jammer_list.length; i++) {
 		let jammer = jammer_list[i];
@@ -101,9 +101,9 @@ async function createFiles(jam_list, max_rank, output_folder) {
 		});
 	}
 
-	toc_data = await writeFileAndGetTocData(jammer_list, output_folder);
+	toc_data = await writeFileAndGetTocData(jammer_list, output_folder, -1);
 
-	let other_data = createOtherData(jammer_list);
+	let other_data = createOtherData(jammer_list, -1);
 	await File.writeJsonFile(other_data, output_folder, 'other_data.json');
 
 	return toc_data;
@@ -112,7 +112,7 @@ async function createFiles(jam_list, max_rank, output_folder) {
 async function createFilesIlscore(jam_list, max_rank, output_folder) {
 	let jammer_list = [];
 
-	jammer_list = await get_updated_jammer_list(jammer_list, jam_list, max_rank);
+	jammer_list = await getUpdatedJammerList(jammer_list, jam_list, max_rank);
 
 	for (let i = 0; i < jammer_list.length; i++) {
 		let jammer = jammer_list[i];
@@ -125,15 +125,15 @@ async function createFilesIlscore(jam_list, max_rank, output_folder) {
 		return b.total_ilscore - a.total_ilscore;
 	});
 
-	toc_data = await writeFileAndGetTocData(jammer_list, output_folder);
+	toc_data = await writeFileAndGetTocData(jammer_list, output_folder, 20);
 	
-	let other_data = createOtherData(jammer_list);
+	let other_data = createOtherData(jammer_list, 20);
 	await File.writeJsonFile(other_data, output_folder, 'other_data.json');
 
 	return toc_data;
 }
 
-async function writeFileAndGetTocData(jammer_list, output_folder) {
+async function writeFileAndGetTocData(jammer_list, output_folder, num_of_page_cap) {
 	toc_data = [];
 
 	for (let i = 0; i < Math.ceil(jammer_list.length / NUM_OF_JAMMER_PER_PAGE); i++) {
@@ -148,7 +148,16 @@ async function writeFileAndGetTocData(jammer_list, output_folder) {
 				index: write_list.length,
 			});
 
-			write_list.push(jammer_list[j]);
+			let clone = {
+				jammer: jammer_list[j].jammer,
+				jammer_link: jammer_list[j].jammer_link,
+				total_ilscore: jammer_list[j].total_ilscore,
+			};
+			if (num_of_page_cap == -1 || i < num_of_page_cap) {
+				clone.game_list_sorted = jammer_list[j].game_list_sorted;
+			}
+
+			write_list.push(clone);
 		}
 		await File.writeJsonFile(write_list, output_folder, 'page_' + SF.intToStrFixedWidth(i) + '.json');
 	}
@@ -156,7 +165,7 @@ async function writeFileAndGetTocData(jammer_list, output_folder) {
 	return toc_data;
 }
 
-function createOtherData(jammer_list) {
+function createOtherData(jammer_list, num_of_page_cap) {
 	let num_of_game = 0;
 	let num_of_majorjammer = 0;
 	let num_of_minijammer = 0;
@@ -189,6 +198,10 @@ function createOtherData(jammer_list) {
 		num_of_jammer_per_page: NUM_OF_JAMMER_PER_PAGE,
 	}
 
+	if (num_of_page_cap != -1) {
+		other_data.num_of_page = num_of_page_cap;
+	}
+
 	return other_data;
 }
 
@@ -200,7 +213,7 @@ function getJamNameAndLink(jam_list, jam_id) {
 	}
 }
 
-async function get_updated_jammer_list(jammer_list, jam_list, max_rank) {
+async function getUpdatedJammerList(jammer_list, jam_list, max_rank) {
 	let num_of_mini_jam = jam_list.mini_jam_list.length;
 	let num_of_major_jam = jam_list.major_jam_list.length;
 
