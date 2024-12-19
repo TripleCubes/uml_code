@@ -15,9 +15,9 @@ function addPageTopBottom(html_str, list_additional_css) {
 			<meta charset="UTF-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>Unofficial Mini Jam Leaderboard</title>
+			<link rel="icon" href="../_icon/icon.png" />
 			<link rel="stylesheet" href="../_css/main.css" />`;
-	let top_2 = `	
-			<link rel="shortcut icon" href="#" />
+	let top_2 = `
 		</head>
 		<body>
 			<div id="content">`;
