@@ -13,10 +13,9 @@ async function create() {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Unofficial Mini Jam Leaderboard</title>
 
+	<link rel="icon" href="../_icon/icon.png">
 	<link rel="stylesheet" href="../_css/main.css">
 	<link rel="stylesheet" href="../_css/stats.css">
-
-	<link rel="shortcut icon" href="#">
 </head>
 <body>
 	<div id="content">
