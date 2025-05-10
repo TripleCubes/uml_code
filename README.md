@@ -42,7 +42,7 @@ The workflow is, you scrap files, and then generate data files, and then you gen
 To generate the json files, you need the scrapped files \
 To generate the html files, you need the generated json files
 
-After all files are generated, copy the `docs/` and `_scraped_files/` folders to https://github.com/TripleCubes/uml
+After all files are generated, copy the `docs/` and `_scraped_files/` folders to https://github.com/TripleCubes/uml, and then commit and push the changes
 
 ## Scraped jams wont get rescraped
 All the scraped files are saved in `_scraped_files/` folder
