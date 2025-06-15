@@ -14,6 +14,8 @@ To install jsdom globally, use
 npm install jsdom -g
 ```
 
+You will also need to [setup your `NODE_PATH`](https://stackoverflow.com/questions/7970793/how-do-i-import-global-modules-in-node-i-get-error-cannot-find-module-module). The link gave linux instruction, for Windows google "How to add environment variables Windows"
+
 # Commands
 There are 3 commands:
 
