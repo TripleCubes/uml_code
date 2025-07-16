@@ -1,9 +1,9 @@
 # This repo is the old version of Unofficial Mini Jam Leaderboard
-Check out the new version. It is located at https://github.com/TripleCubes/uml
+**IMPORTANT:** Aside from this notice, I have not updated anything else in this repo, including the text of this README. So all the README stuff you see after this notice, consider them outdated
+
+Check out the new version of the unofficial leaderboard. It is located at https://github.com/TripleCubes/uml
 
 You will notice that the url of the new version is the same url as the github pages repo for the old unofficial leaderboard. From now on that url will be for the new unofficial leaderboard's source code and github pages repo
-
-**IMPORTANT:** Aside from this notice, I have not updated anything else in this repo, including the text of this README. So all the README stuff you see after this notice, consider them outdated
 
 An archive of the old unofficial leaderboard is available at https://triplecubes.github.io/uml_legacy, and ofcourse, we have this repo that host the old unofficial leaderboard source code as well
 
